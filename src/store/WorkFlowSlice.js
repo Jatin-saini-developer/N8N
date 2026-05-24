@@ -19,8 +19,21 @@ const workflowSlice = createSlice({
     setSelectedNode: (state, action) => {
       state.selectedNode = action.payload
     },
+    updateNodeData: (state, action) => {
+      const { id, data } = action.payload
+      const node = state.nodes.find((n) => n.id === id)
+      if (node) {
+        node.data = { ...node.data, ...data }
+      }
+    },
   },
 })
 
-export const { setNodes, setEdges, setSelectedNode } = workflowSlice.actions
+export const {
+  setNodes,
+  setEdges,
+  setSelectedNode,
+  updateNodeData,
+} = workflowSlice.actions
+
 export default workflowSlice.reducer
