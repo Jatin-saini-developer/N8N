@@ -1,18 +1,24 @@
+import { Routes, Route, Navigate } from 'react-router-dom'
 import Canvas from './components/Canvas/Canvas'
 import Sidebar from './components/Sidebar/Sidebar'
 import Topbar from './components/Topbar/Topbar'
+import ConfigPanel from './components/ConfigPanel/ConfigPanel'
+import Login from './pages/Login'
+import Signup from './pages/Signup'
+import Dashboard from './pages/Dashboard'
+
+
+
 
 function App() {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-      <Topbar />
-      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-        <Sidebar />
-        <div style={{ flex: 1 }}>
-          <Canvas />
-        </div>
-      </div>
-    </div>
+    <Routes>
+      <Route path='/' element={<Navigate to='/login' />} />
+      <Route path='/login' element={<Login />} />
+      <Route path='/signup' element={<Signup />} />
+      <Route path='/dashboard' element={<Dashboard />} />
+      {/* <Route path='/workflow/:id' element={<WorkflowEditor />} /> */}
+    </Routes>
   )
 }
 

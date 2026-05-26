@@ -1,13 +1,40 @@
-import { useSelector } from 'react-redux'
+import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { setWorkflowName } from '../../store/workflowSlice'
 
 function Topbar() {
+  const dispatch = useDispatch()
   const nodes = useSelector((state) => state.workflow.nodes)
   const edges = useSelector((state) => state.workflow.edges)
+  const workflowName = useSelector((state) => state.workflow.workflowName)
+
+  const [isEditing, setIsEditing] = useState(false)
 
   const handleSave = () => {
-    const workflow = { nodes, edges }
+    const workflow = { workflowName, nodes, edges }
     console.log('Workflow saved:', JSON.stringify(workflow, null, 2))
     alert('Workflow saved to console! Check DevTools.')
+  }
+
+  const handleNameClick = () => {
+    setIsEditing(true)
+  }
+
+  const handleNameBlur = (e) => {
+    const value = e.target.value.trim()
+    if (value) {
+      dispatch(setWorkflowName(value))
+    }
+    setIsEditing(false)
+  }
+
+  const handleNameKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.target.blur()
+    }
+    if (e.key === 'Escape') {
+      setIsEditing(false)
+    }
   }
 
   return (
@@ -34,10 +61,49 @@ function Topbar() {
         }}>
           ZeroDay
         </span>
-        <span style={{ color: '#1f2937' }}>|</span>
-        <span style={{ color: '#9ca3af', fontSize: '13px' }}>
-          Developer Onboarding Workflow
-        </span>
+        <span style={{ color: '#374151' }}>|</span>
+
+        {isEditing ? (
+          <input
+            autoFocus
+            defaultValue={workflowName}
+            onBlur={handleNameBlur}
+            onKeyDown={handleNameKeyDown}
+            style={{
+              background: '#1a1f2e',
+              border: '1px solid #3b82f6',
+              borderRadius: '6px',
+              color: '#e8e8f0',
+              fontSize: '13px',
+              padding: '4px 8px',
+              outline: 'none',
+              width: '240px',
+            }}
+          />
+        ) : (
+          <span
+            onClick={handleNameClick}
+            title='Click to edit'
+            style={{
+              color: '#9ca3af',
+              fontSize: '13px',
+              cursor: 'pointer',
+              padding: '4px 8px',
+              borderRadius: '6px',
+              border: '1px solid transparent',
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.border = '1px solid #374151'
+              e.target.style.color = '#e8e8f0'
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.border = '1px solid transparent'
+              e.target.style.color = '#9ca3af'
+            }}
+          >
+            {workflowName}
+          </span>
+        )}
       </div>
 
       {/* Right — Buttons */}

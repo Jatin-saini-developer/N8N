@@ -4,6 +4,7 @@ const initialState = {
   nodes: [],
   edges: [],
   selectedNode: null,
+  workflowName: 'Developer Onboarding Workflow',
 }
 
 const workflowSlice = createSlice({
@@ -26,6 +27,9 @@ const workflowSlice = createSlice({
         node.data = { ...node.data, ...data }
       }
     },
+    setWorkflowName: (state, action) => {
+      state.workflowName = action.payload
+    },
   },
 })
 
@@ -34,6 +38,7 @@ export const {
   setEdges,
   setSelectedNode,
   updateNodeData,
+  setWorkflowName,
 } = workflowSlice.actions
 
 export default workflowSlice.reducer

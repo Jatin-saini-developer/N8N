@@ -17,6 +17,18 @@ const nodeList = [
     icon: '💬',
     description: 'Add to Slack Channels',
   },
+  {
+    type: 'jira',
+    label: 'Jira',
+    icon: '📋',
+    description: 'Add to Jira Project',
+  },
+  {
+    type: 'notion',
+    label: 'Notion',
+    icon: '📝',
+    description: 'Send Notion Docs',
+  },
 ]
 
 function Sidebar() {
