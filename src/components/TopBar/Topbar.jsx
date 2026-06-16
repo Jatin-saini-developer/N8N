@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setWorkflowName } from '../../store/workflowSlice'
+import { useNavigate } from 'react-router-dom'
 
 function Topbar() {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const nodes = useSelector((state) => state.workflow.nodes)
   const edges = useSelector((state) => state.workflow.edges)
   const workflowName = useSelector((state) => state.workflow.workflowName)
@@ -40,28 +42,55 @@ function Topbar() {
   return (
     <div style={{
       width: '100%',
-      height: '52px',
-      background: '#111827',
-      borderBottom: '1px solid #1f2937',
+      height: '48px',
+      background: '#000',
+      borderBottom: '1px solid rgba(255,255,255,0.06)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      padding: '0 20px',
+      padding: '0 16px',
       boxSizing: 'border-box',
-      fontFamily: 'sans-serif',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
     }}>
 
       {/* Left — Logo + Workflow Name */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <span style={{
-          color: '#60a5fa',
-          fontWeight: '700',
-          fontSize: '16px',
-          letterSpacing: '-0.5px',
-        }}>
-          ZeroDay
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div
+          onClick={() => navigate('/dashboard')}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            cursor: 'pointer',
+          }}
+        >
+          <div style={{
+            width: '26px',
+            height: '26px',
+            borderRadius: '7px',
+            background: 'rgba(255,255,255,0.06)',
+            border: '1px solid rgba(255,255,255,0.06)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+            </svg>
+          </div>
+          <span style={{
+            color: '#fff',
+            fontWeight: '600',
+            fontSize: '14px',
+            letterSpacing: '-0.3px',
+          }}>
+            DevOnboard
+          </span>
+        </div>
+
+        <span style={{ color: 'rgba(255,255,255,0.08)', fontSize: '14px' }}>
+          /
         </span>
-        <span style={{ color: '#374151' }}>|</span>
 
         {isEditing ? (
           <input
@@ -70,14 +99,15 @@ function Topbar() {
             onBlur={handleNameBlur}
             onKeyDown={handleNameKeyDown}
             style={{
-              background: '#1a1f2e',
-              border: '1px solid #3b82f6',
+              background: 'rgba(255,255,255,0.03)',
+              border: '1px solid rgba(255,255,255,0.12)',
               borderRadius: '6px',
-              color: '#e8e8f0',
+              color: '#fff',
               fontSize: '13px',
               padding: '4px 8px',
               outline: 'none',
-              width: '240px',
+              width: '220px',
+              fontFamily: 'inherit',
             }}
           />
         ) : (
@@ -85,20 +115,21 @@ function Topbar() {
             onClick={handleNameClick}
             title='Click to edit'
             style={{
-              color: '#9ca3af',
+              color: 'rgba(255,255,255,0.4)',
               fontSize: '13px',
               cursor: 'pointer',
               padding: '4px 8px',
               borderRadius: '6px',
               border: '1px solid transparent',
+              transition: 'all 0.15s ease',
             }}
             onMouseEnter={(e) => {
-              e.target.style.border = '1px solid #374151'
-              e.target.style.color = '#e8e8f0'
+              e.target.style.border = '1px solid rgba(255,255,255,0.08)'
+              e.target.style.color = '#fff'
             }}
             onMouseLeave={(e) => {
               e.target.style.border = '1px solid transparent'
-              e.target.style.color = '#9ca3af'
+              e.target.style.color = 'rgba(255,255,255,0.4)'
             }}
           >
             {workflowName}
@@ -107,31 +138,49 @@ function Topbar() {
       </div>
 
       {/* Right — Buttons */}
-      <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+      <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
         <button
           onClick={handleSave}
           style={{
             background: 'transparent',
-            border: '1px solid #374151',
-            borderRadius: '6px',
-            color: '#9ca3af',
-            padding: '6px 14px',
+            border: '1px solid rgba(255,255,255,0.06)',
+            borderRadius: '7px',
+            color: 'rgba(255,255,255,0.5)',
+            padding: '5px 14px',
             fontSize: '13px',
             cursor: 'pointer',
+            fontFamily: 'inherit',
+            transition: 'all 0.15s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.borderColor = 'rgba(255,255,255,0.12)'
+            e.target.style.color = '#fff'
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.borderColor = 'rgba(255,255,255,0.06)'
+            e.target.style.color = 'rgba(255,255,255,0.5)'
           }}
         >
           Save
         </button>
         <button
           style={{
-            background: '#2563eb',
+            background: '#fff',
             border: 'none',
-            borderRadius: '6px',
-            color: '#fff',
-            padding: '6px 14px',
+            borderRadius: '7px',
+            color: '#000',
+            padding: '5px 14px',
             fontSize: '13px',
             cursor: 'pointer',
             fontWeight: '600',
+            fontFamily: 'inherit',
+            transition: 'all 0.15s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.background = 'rgba(255,255,255,0.85)'
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.background = '#fff'
           }}
         >
           Run

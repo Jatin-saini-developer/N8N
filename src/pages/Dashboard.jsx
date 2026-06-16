@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 const initialWorkflows = [
   {
@@ -66,18 +66,25 @@ function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950">
+    <div className="min-h-screen bg-black">
 
       {/* Topbar */}
-      <div className="bg-gray-900 border-b border-gray-800 px-6 py-4 flex items-center justify-between">
-        <h1 className="text-blue-400 text-xl font-bold tracking-tight">
-          ZeroDay
-        </h1>
+      <div className="border-b border-white/[0.06] px-6 py-3.5 flex items-center justify-between">
+        <Link to="/" className="flex items-center gap-2.5">
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/[0.08] border border-white/[0.06]">
+            <svg className="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+            </svg>
+          </div>
+          <span className="text-[15px] font-semibold tracking-tight text-white">
+            DevOnboard
+          </span>
+        </Link>
         <div className="flex items-center gap-4">
-          <span className="text-gray-500 text-sm">My Workspace</span>
+          <span className="text-neutral-600 text-[13px]">My Workspace</span>
           <button
             onClick={handleLogout}
-            className="text-gray-400 hover:text-white text-sm border border-gray-700 hover:border-gray-500 rounded-lg px-4 py-1.5 transition-colors"
+            className="text-neutral-500 hover:text-white text-[13px] border border-white/[0.06] hover:border-white/[0.12] rounded-lg px-3.5 py-1.5 transition-all duration-200"
           >
             Logout
           </button>
@@ -90,18 +97,18 @@ function Dashboard() {
         {/* Header row */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h2 className="text-white text-2xl font-semibold">
+            <h2 className="text-white text-xl font-semibold tracking-tight">
               My Workflows
             </h2>
-            <p className="text-gray-500 text-sm mt-1">
+            <p className="text-neutral-600 text-[13px] mt-1">
               {workflows.length} workflow{workflows.length !== 1 ? 's' : ''}
             </p>
           </div>
           <button
             onClick={handleNewWorkflow}
-            className="bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold rounded-lg px-5 py-2.5 transition-colors flex items-center gap-2"
+            className="bg-white hover:bg-neutral-200 text-black text-[13px] font-semibold rounded-lg px-4 py-2 transition-all duration-200 flex items-center gap-1.5"
           >
-            <span className="text-lg leading-none">+</span>
+            <span className="text-base leading-none">+</span>
             New Workflow
           </button>
         </div>
@@ -109,16 +116,16 @@ function Dashboard() {
         {/* Workflow grid */}
         {workflows.length === 0 ? (
           <div className="text-center py-24">
-            <div className="text-5xl mb-4">⚡</div>
-            <p className="text-gray-400 text-lg font-medium">
+            <div className="text-4xl mb-4">⚡</div>
+            <p className="text-neutral-300 text-base font-medium">
               No workflows yet
             </p>
-            <p className="text-gray-600 text-sm mt-2 mb-6">
+            <p className="text-neutral-700 text-[13px] mt-2 mb-6">
               Create your first workflow to get started
             </p>
             <button
               onClick={handleNewWorkflow}
-              className="bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold rounded-lg px-5 py-2.5 transition-colors"
+              className="bg-white hover:bg-neutral-200 text-black text-[13px] font-semibold rounded-lg px-5 py-2.5 transition-all duration-200"
             >
               Create Workflow
             </button>
@@ -129,26 +136,26 @@ function Dashboard() {
               <div
                 key={workflow.id}
                 onClick={() => handleOpenWorkflow(workflow.id)}
-                className="bg-gray-900 border border-gray-800 hover:border-gray-600 rounded-xl p-6 cursor-pointer transition-all group"
+                className="border border-white/[0.06] bg-white/[0.02] hover:border-white/[0.12] hover:bg-white/[0.03] rounded-xl p-6 cursor-pointer transition-all duration-200 group"
               >
                 {/* Card header */}
-                <div className="flex items-start justify-between mb-3">
-                  <div className="bg-blue-500/10 rounded-lg p-2">
-                    <span className="text-xl">⚡</span>
+                <div className="flex items-start justify-between mb-4">
+                  <div className="bg-white/[0.04] border border-white/[0.06] rounded-lg p-2">
+                    <span className="text-lg">⚡</span>
                   </div>
                   <div className="flex items-center gap-2">
                     {/* Status badge */}
-                    <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${
+                    <span className={`text-[11px] font-medium px-2.5 py-1 rounded-full ${
                       workflow.status === 'active'
-                        ? 'bg-green-500/10 text-green-400'
-                        : 'bg-gray-700 text-gray-400'
+                        ? 'bg-emerald-500/[0.08] text-emerald-500/80 border border-emerald-500/[0.1]'
+                        : 'bg-white/[0.03] text-neutral-600 border border-white/[0.06]'
                     }`}>
                       {workflow.status}
                     </span>
                     {/* Delete button */}
                     <button
                       onClick={(e) => handleDeleteClick(e, workflow)}
-                      className="text-gray-600 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100 text-lg leading-none"
+                      className="text-neutral-800 hover:text-red-400/80 transition-all duration-200 opacity-0 group-hover:opacity-100 text-sm leading-none"
                     >
                       ✕
                     </button>
@@ -156,19 +163,19 @@ function Dashboard() {
                 </div>
 
                 {/* Card body */}
-                <h3 className="text-white text-base font-semibold mb-1">
+                <h3 className="text-neutral-200 text-[14px] font-semibold mb-1 group-hover:text-white transition-colors duration-200">
                   {workflow.name}
                 </h3>
-                <p className="text-gray-500 text-sm mb-4 line-clamp-2">
+                <p className="text-neutral-600 text-[13px] mb-4 line-clamp-2">
                   {workflow.description}
                 </p>
 
                 {/* Card footer */}
-                <div className="flex items-center justify-between pt-4 border-t border-gray-800">
-                  <span className="text-gray-600 text-xs">
+                <div className="flex items-center justify-between pt-4 border-t border-white/[0.04]">
+                  <span className="text-neutral-700 text-[11px]">
                     {workflow.nodes} node{workflow.nodes !== 1 ? 's' : ''}
                   </span>
-                  <span className="text-gray-600 text-xs">
+                  <span className="text-neutral-700 text-[11px]">
                     {workflow.createdAt}
                   </span>
                 </div>
@@ -181,12 +188,12 @@ function Dashboard() {
 
       {/* Delete confirmation modal */}
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 w-full max-w-sm">
-            <h3 className="text-white text-lg font-semibold mb-2">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 px-4">
+          <div className="border border-white/[0.06] bg-neutral-950 rounded-xl p-6 w-full max-w-sm">
+            <h3 className="text-white text-base font-semibold mb-2">
               Delete Workflow
             </h3>
-            <p className="text-gray-400 text-sm mb-6">
+            <p className="text-neutral-500 text-[13px] mb-6 leading-relaxed">
               Are you sure you want to delete{' '}
               <span className="text-white font-medium">
                 "{selectedWorkflow?.name}"
@@ -196,13 +203,13 @@ function Dashboard() {
             <div className="flex gap-3">
               <button
                 onClick={handleDeleteCancel}
-                className="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-300 text-sm font-medium rounded-lg px-4 py-2.5 transition-colors"
+                className="flex-1 bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] text-neutral-300 text-[13px] font-medium rounded-lg px-4 py-2.5 transition-all duration-200"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDeleteConfirm}
-                className="flex-1 bg-red-600 hover:bg-red-500 text-white text-sm font-medium rounded-lg px-4 py-2.5 transition-colors"
+                className="flex-1 bg-red-500/[0.1] hover:bg-red-500/[0.15] border border-red-500/[0.15] text-red-400/90 text-[13px] font-medium rounded-lg px-4 py-2.5 transition-all duration-200"
               >
                 Delete
               </button>

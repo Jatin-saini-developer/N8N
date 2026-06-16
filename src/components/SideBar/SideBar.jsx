@@ -40,22 +40,23 @@ function Sidebar() {
   return (
     <div style={{
       width: '220px',
-      height: '100vh',
-      background: '#111827',
-      borderRight: '1px solid #1f2937',
-      padding: '16px 12px',
+      height: '100%',
+      background: '#000',
+      borderRight: '1px solid rgba(255,255,255,0.06)',
+      padding: '14px 10px',
       display: 'flex',
       flexDirection: 'column',
-      gap: '8px',
-      fontFamily: 'sans-serif',
+      gap: '4px',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      boxSizing: 'border-box',
     }}>
       <p style={{
-        color: '#6b7280',
+        color: 'rgba(255,255,255,0.3)',
         fontSize: '11px',
-        fontWeight: '600',
+        fontWeight: '500',
         textTransform: 'uppercase',
         letterSpacing: '0.1em',
-        margin: '0 0 8px 4px',
+        margin: '0 0 8px 6px',
       }}>
         Nodes
       </p>
@@ -66,23 +67,34 @@ function Sidebar() {
           draggable
           onDragStart={(e) => onDragStart(e, node.type)}
           style={{
-            background: '#1a1f2e',
-            border: '1px solid #1f2937',
+            background: 'rgba(255,255,255,0.02)',
+            border: '1px solid rgba(255,255,255,0.06)',
             borderRadius: '8px',
             padding: '10px 12px',
             cursor: 'grab',
             display: 'flex',
             alignItems: 'center',
             gap: '10px',
-            color: '#e8e8f0',
+            color: 'rgba(255,255,255,0.7)',
+            transition: 'all 0.15s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgba(255,255,255,0.04)'
+            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'
+            e.currentTarget.style.color = '#fff'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'rgba(255,255,255,0.02)'
+            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'
+            e.currentTarget.style.color = 'rgba(255,255,255,0.7)'
           }}
         >
-          <span style={{ fontSize: '20px' }}>{node.icon}</span>
+          <span style={{ fontSize: '18px' }}>{node.icon}</span>
           <div>
-            <div style={{ fontSize: '13px', fontWeight: '600' }}>
+            <div style={{ fontSize: '13px', fontWeight: '500' }}>
               {node.label}
             </div>
-            <div style={{ fontSize: '11px', color: '#6b7280' }}>
+            <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.25)' }}>
               {node.description}
             </div>
           </div>

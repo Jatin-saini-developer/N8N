@@ -38,8 +38,8 @@ const nodeLabels = {
 const defaultEdgeOptions = {
   animated: true,
   style: {
-    stroke: '#3b82f6',
-    strokeWidth: 2,
+    stroke: 'rgba(255,255,255,0.15)',
+    strokeWidth: 1.5,
   },
 }
 
@@ -99,7 +99,7 @@ function CanvasInner() {
   const isEmpty = nodes.length === 0
 
   return (
-    <div style={{ width: '100%', height: '100vh', position: 'relative' }}>
+    <div style={{ width: '100%', height: '100%', position: 'relative', background: '#0a0a0a' }}>
 
       {/* Empty state — only shows when no nodes on canvas */}
       {isEmpty && (
@@ -112,21 +112,21 @@ function CanvasInner() {
           textAlign: 'center',
           pointerEvents: 'none',
         }}>
-          <div style={{ fontSize: '40px', marginBottom: '12px' }}>⚡</div>
+          <div style={{ fontSize: '36px', marginBottom: '12px', opacity: 0.5 }}>⚡</div>
           <p style={{
-            color: '#4b5563',
-            fontSize: '15px',
-            fontWeight: '600',
+            color: 'rgba(255,255,255,0.3)',
+            fontSize: '14px',
+            fontWeight: '500',
             margin: '0 0 6px',
-            fontFamily: 'sans-serif',
+            fontFamily: 'system-ui, -apple-system, sans-serif',
           }}>
             Start building your workflow
           </p>
           <p style={{
-            color: '#374151',
+            color: 'rgba(255,255,255,0.15)',
             fontSize: '13px',
             margin: 0,
-            fontFamily: 'sans-serif',
+            fontFamily: 'system-ui, -apple-system, sans-serif',
           }}>
             Drag a node from the left sidebar to get started
           </p>
@@ -147,10 +147,25 @@ function CanvasInner() {
         onPaneClick={onPaneClick}
         deleteKeyCode='Delete'
         fitView
+        proOptions={{ hideAttribution: true }}
       >
-        <Background />
-        <Controls />
-        <MiniMap />
+        <Background color="rgba(255,255,255,0.03)" gap={20} size={1} />
+        <Controls
+          style={{
+            background: '#0a0a0a',
+            border: '1px solid rgba(255,255,255,0.06)',
+            borderRadius: '8px',
+          }}
+        />
+        <MiniMap
+          style={{
+            background: '#0a0a0a',
+            border: '1px solid rgba(255,255,255,0.06)',
+            borderRadius: '8px',
+          }}
+          maskColor="rgba(0,0,0,0.7)"
+          nodeColor="rgba(255,255,255,0.15)"
+        />
       </ReactFlow>
 
     </div>

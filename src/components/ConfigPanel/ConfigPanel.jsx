@@ -144,7 +144,7 @@ function ConfigPanel() {
 
       default:
         return (
-          <p style={{ color: "#6b7280", fontSize: "13px" }}>
+          <p style={{ color: "rgba(255,255,255,0.3)", fontSize: "13px" }}>
             No configuration available for this node.
           </p>
         );
@@ -159,7 +159,12 @@ function ConfigPanel() {
           <p style={styles.nodeType}>{selectedNode.type.toUpperCase()}</p>
           <p style={styles.nodeLabel}>{selectedNode.data.label}</p>
         </div>
-        <button onClick={handleClose} style={styles.closeBtn}>
+        <button
+          onClick={handleClose}
+          style={styles.closeBtn}
+          onMouseEnter={(e) => { e.target.style.color = '#fff' }}
+          onMouseLeave={(e) => { e.target.style.color = 'rgba(255,255,255,0.3)' }}
+        >
           ✕
         </button>
       </div>
@@ -176,10 +181,10 @@ function ConfigPanel() {
 const styles = {
   panel: {
     width: "280px",
-    height: "100vh",
-    background: "#111827",
-    borderLeft: "1px solid #1f2937",
-    fontFamily: "sans-serif",
+    height: "100%",
+    background: "#000",
+    borderLeft: "1px solid rgba(255,255,255,0.06)",
+    fontFamily: "system-ui, -apple-system, sans-serif",
     display: "flex",
     flexDirection: "column",
     position: "absolute",
@@ -191,17 +196,17 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "16px",
+    padding: "14px 16px",
   },
   nodeType: {
-    color: "#6b7280",
+    color: "rgba(255,255,255,0.25)",
     fontSize: "10px",
-    fontWeight: "700",
-    letterSpacing: "0.1em",
+    fontWeight: "500",
+    letterSpacing: "0.12em",
     margin: "0 0 4px",
   },
   nodeLabel: {
-    color: "#e8e8f0",
+    color: "#fff",
     fontSize: "14px",
     fontWeight: "600",
     margin: 0,
@@ -209,13 +214,15 @@ const styles = {
   closeBtn: {
     background: "transparent",
     border: "none",
-    color: "#6b7280",
-    fontSize: "16px",
+    color: "rgba(255,255,255,0.3)",
+    fontSize: "14px",
     cursor: "pointer",
+    padding: "4px",
+    transition: "color 0.15s ease",
   },
   divider: {
     height: "1px",
-    background: "#1f2937",
+    background: "rgba(255,255,255,0.06)",
     margin: "0 16px",
   },
   body: {
@@ -226,26 +233,28 @@ const styles = {
   fieldGroup: {
     display: "flex",
     flexDirection: "column",
-    gap: "8px",
+    gap: "6px",
   },
   label: {
-    color: "#9ca3af",
+    color: "rgba(255,255,255,0.35)",
     fontSize: "11px",
-    fontWeight: "600",
+    fontWeight: "500",
     textTransform: "uppercase",
-    letterSpacing: "0.05em",
-    marginTop: "8px",
+    letterSpacing: "0.08em",
+    marginTop: "10px",
   },
   input: {
-    background: "#1a1f2e",
-    border: "1px solid #1f2937",
-    borderRadius: "6px",
-    color: "#e8e8f0",
+    background: "rgba(255,255,255,0.03)",
+    border: "1px solid rgba(255,255,255,0.06)",
+    borderRadius: "7px",
+    color: "#fff",
     padding: "8px 10px",
     fontSize: "13px",
     outline: "none",
     width: "100%",
     boxSizing: "border-box",
+    fontFamily: "inherit",
+    transition: "border-color 0.15s ease",
   },
 };
 
