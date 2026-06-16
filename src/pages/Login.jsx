@@ -37,29 +37,36 @@ function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-black flex items-center justify-center px-4">
+      <div className="w-full max-w-sm">
 
         {/* Logo */}
-        <div className="text-center mb-8">
-          <h1 className="text-blue-400 text-3xl font-bold tracking-tight">
-            ZeroDay
-          </h1>
-          <p className="text-gray-500 text-sm mt-2">
+        <div className="text-center mb-10">
+          <Link to="/" className="inline-flex items-center gap-2.5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.08] border border-white/[0.06]">
+              <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+              </svg>
+            </div>
+            <span className="text-[17px] font-semibold tracking-tight text-white">
+              DevOnboard
+            </span>
+          </Link>
+          <p className="text-neutral-600 text-[13px] mt-3">
             Automate your developer onboarding
           </p>
         </div>
 
         {/* Card */}
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-8">
+        <div className="border border-white/[0.06] bg-white/[0.02] rounded-xl p-7">
 
-          <h2 className="text-white text-xl font-semibold mb-6">
+          <h2 className="text-white text-lg font-semibold mb-6">
             Welcome back
           </h2>
 
           {/* Error message */}
           {error && (
-            <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-lg px-4 py-3 mb-4">
+            <div className="bg-red-500/[0.06] border border-red-500/[0.1] text-red-400/80 text-[13px] rounded-lg px-4 py-3 mb-5">
               {error}
             </div>
           )}
@@ -68,7 +75,7 @@ function Login() {
           <div className="space-y-4">
 
             <div>
-              <label className="text-gray-400 text-xs font-semibold uppercase tracking-wider">
+              <label className="text-neutral-500 text-[11px] font-medium uppercase tracking-wider">
                 Email
               </label>
               <input
@@ -77,12 +84,12 @@ function Login() {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="you@company.com"
-                className="w-full mt-1.5 bg-gray-800 border border-gray-700 text-white text-sm rounded-lg px-4 py-2.5 outline-none focus:border-blue-500 transition-colors placeholder-gray-600"
+                className="w-full mt-1.5 bg-white/[0.02] border border-white/[0.06] text-white text-[14px] rounded-lg px-4 py-2.5 outline-none focus:border-white/[0.15] transition-colors placeholder-neutral-700"
               />
             </div>
 
             <div>
-              <label className="text-gray-400 text-xs font-semibold uppercase tracking-wider">
+              <label className="text-neutral-500 text-[11px] font-medium uppercase tracking-wider">
                 Password
               </label>
               <input
@@ -91,14 +98,14 @@ function Login() {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="••••••••"
-                className="w-full mt-1.5 bg-gray-800 border border-gray-700 text-white text-sm rounded-lg px-4 py-2.5 outline-none focus:border-blue-500 transition-colors placeholder-gray-600"
+                className="w-full mt-1.5 bg-white/[0.02] border border-white/[0.06] text-white text-[14px] rounded-lg px-4 py-2.5 outline-none focus:border-white/[0.15] transition-colors placeholder-neutral-700"
               />
             </div>
 
             <button
               onClick={handleSubmit}
               disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg px-4 py-2.5 transition-colors mt-2"
+              className="w-full bg-white hover:bg-neutral-200 disabled:opacity-40 disabled:cursor-not-allowed text-black text-[14px] font-semibold rounded-lg px-4 py-2.5 transition-all duration-200 mt-2"
             >
               {loading ? 'Signing in...' : 'Sign in'}
             </button>
@@ -106,12 +113,12 @@ function Login() {
           </div>
 
           {/* Divider */}
-          <div className="border-t border-gray-800 mt-6 pt-6">
-            <p className="text-gray-500 text-sm text-center">
+          <div className="border-t border-white/[0.04] mt-6 pt-6">
+            <p className="text-neutral-600 text-[13px] text-center">
               Don't have an account?{' '}
               <Link
                 to="/signup"
-                className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
+                className="text-neutral-300 hover:text-white font-medium transition-colors duration-200"
               >
                 Sign up
               </Link>
