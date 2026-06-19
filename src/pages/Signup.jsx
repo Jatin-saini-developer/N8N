@@ -1,52 +1,62 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { signup, clearError, selectAuthLoading, selectAuthError, selectIsLoggedIn } from '../store/authSlice'
 
 function Signup() {
-  const navigate = useNavigate()
+  const navigate   = useNavigate()
+  const dispatch   = useDispatch()
+
+  const loading    = useSelector(selectAuthLoading)
+  const authError  = useSelector(selectAuthError)
+  const isLoggedIn = useSelector(selectIsLoggedIn)
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     confirmPassword: '',
   })
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [localError, setLocalError] = useState('')
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isLoggedIn) navigate('/dashboard', { replace: true })
+  }, [isLoggedIn, navigate])
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
-    setError('')
+    setLocalError('')
+    dispatch(clearError())
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
+    // Client-side validation
     if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
-      setError('Please fill in all fields')
+      setLocalError('Please fill in all fields')
       return
     }
-
     if (formData.password.length < 8) {
-      setError('Password must be at least 8 characters')
+      setLocalError('Password must be at least 8 characters')
       return
     }
-
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match')
+      setLocalError('Passwords do not match')
       return
     }
 
-    try {
-      setLoading(true)
-      // We will connect this to backend later
-      // For now just simulate signup
-      localStorage.setItem('token', 'test-token')
-      navigate('/dashboard')
-    } catch (err) {
-      setError('Something went wrong. Please try again.')
-    } finally {
-      setLoading(false)
+    // Dispatch the signup thunk (confirmPassword is not sent to the API)
+    const { name, email, password } = formData
+    const result = await dispatch(signup({ name, email, password }))
+
+    if (signup.fulfilled.match(result)) {
+      navigate('/dashboard', { replace: true })
     }
   }
+
+  const displayError = authError || localError
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center px-4">
@@ -77,9 +87,9 @@ function Signup() {
           </h2>
 
           {/* Error message */}
-          {error && (
+          {displayError && (
             <div className="bg-red-500/[0.06] border border-red-500/[0.1] text-red-400/80 text-[13px] rounded-lg px-4 py-3 mb-5">
-              {error}
+              {displayError}
             </div>
           )}
 
@@ -96,7 +106,8 @@ function Signup() {
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="John Doe"
-                className="w-full mt-1.5 bg-white/[0.02] border border-white/[0.06] text-white text-[14px] rounded-lg px-4 py-2.5 outline-none focus:border-white/[0.15] transition-colors placeholder-neutral-700"
+                disabled={loading}
+                className="w-full mt-1.5 bg-white/[0.02] border border-white/[0.06] text-white text-[14px] rounded-lg px-4 py-2.5 outline-none focus:border-white/[0.15] transition-colors placeholder-neutral-700 disabled:opacity-50"
               />
             </div>
 
@@ -110,7 +121,8 @@ function Signup() {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="you@company.com"
-                className="w-full mt-1.5 bg-white/[0.02] border border-white/[0.06] text-white text-[14px] rounded-lg px-4 py-2.5 outline-none focus:border-white/[0.15] transition-colors placeholder-neutral-700"
+                disabled={loading}
+                className="w-full mt-1.5 bg-white/[0.02] border border-white/[0.06] text-white text-[14px] rounded-lg px-4 py-2.5 outline-none focus:border-white/[0.15] transition-colors placeholder-neutral-700 disabled:opacity-50"
               />
             </div>
 
@@ -124,7 +136,8 @@ function Signup() {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Min. 8 characters"
-                className="w-full mt-1.5 bg-white/[0.02] border border-white/[0.06] text-white text-[14px] rounded-lg px-4 py-2.5 outline-none focus:border-white/[0.15] transition-colors placeholder-neutral-700"
+                disabled={loading}
+                className="w-full mt-1.5 bg-white/[0.02] border border-white/[0.06] text-white text-[14px] rounded-lg px-4 py-2.5 outline-none focus:border-white/[0.15] transition-colors placeholder-neutral-700 disabled:opacity-50"
               />
             </div>
 
@@ -138,7 +151,8 @@ function Signup() {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 placeholder="••••••••"
-                className="w-full mt-1.5 bg-white/[0.02] border border-white/[0.06] text-white text-[14px] rounded-lg px-4 py-2.5 outline-none focus:border-white/[0.15] transition-colors placeholder-neutral-700"
+                disabled={loading}
+                className="w-full mt-1.5 bg-white/[0.02] border border-white/[0.06] text-white text-[14px] rounded-lg px-4 py-2.5 outline-none focus:border-white/[0.15] transition-colors placeholder-neutral-700 disabled:opacity-50"
               />
             </div>
 

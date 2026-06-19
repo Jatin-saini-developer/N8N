@@ -1,24 +1,48 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
-import Canvas from './components/Canvas/Canvas'
-import Sidebar from './components/Sidebar/Sidebar'
-import Topbar from './components/Topbar/Topbar'
-import ConfigPanel from './components/ConfigPanel/ConfigPanel'
+import { useSelector } from 'react-redux'
+import { selectIsLoggedIn } from './store/authSlice'
+
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Dashboard from './pages/Dashboard'
 import WorkflowEditor from './pages/WorkflowEditor'
 import LandingPage from './pages/LandingPage'
 
+/**
+ * ProtectedRoute — wraps any route that requires authentication.
+ * Unauthenticated users are redirected to /login with the intended
+ * destination saved in `state.from` so we can redirect back after login.
+ */
+function ProtectedRoute({ children }) {
+  const isLoggedIn = useSelector(selectIsLoggedIn)
+  return isLoggedIn ? children : <Navigate to="/login" replace />
+}
 
 function App() {
   return (
     <Routes>
-      <Route path='/' element={<Navigate to='/landingpage' />} />
-      <Route path='/login' element={<Login />} />
-      <Route path='/signup' element={<Signup />} />
-      <Route path='/dashboard' element={<Dashboard />} />
-      <Route path='/workflow/:id' element={<WorkflowEditor />} />
-      <Route path='/landingpage' element={<LandingPage />} />
+      <Route path="/"           element={<Navigate to="/landingpage" replace />} />
+      <Route path="/landingpage" element={<LandingPage />} />
+      <Route path="/login"      element={<Login />} />
+      <Route path="/signup"     element={<Signup />} />
+
+      {/* Protected routes */}
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/workflow/:id"
+        element={
+          <ProtectedRoute>
+            <WorkflowEditor />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   )
 }

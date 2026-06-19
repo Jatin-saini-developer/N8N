@@ -1,40 +1,50 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { login, clearError, selectAuthLoading, selectAuthError, selectIsLoggedIn } from '../store/authSlice'
 
 function Login() {
-  const navigate = useNavigate()
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  })
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const navigate  = useNavigate()
+  const dispatch  = useDispatch()
+
+  const loading   = useSelector(selectAuthLoading)
+  const authError = useSelector(selectAuthError)
+  const isLoggedIn = useSelector(selectIsLoggedIn)
+
+  const [formData, setFormData] = useState({ email: '', password: '' })
+  const [localError, setLocalError] = useState('')
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isLoggedIn) navigate('/dashboard', { replace: true })
+  }, [isLoggedIn, navigate])
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
-    setError('')
+    setLocalError('')
+    dispatch(clearError())
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
+    // Client-side validation
     if (!formData.email || !formData.password) {
-      setError('Please fill in all fields')
+      setLocalError('Please fill in all fields')
       return
     }
 
-    try {
-      setLoading(true)
-      // We will connect this to backend later
-      // For now just simulate login
-      localStorage.setItem('token', 'test-token')
-      navigate('/dashboard')
-    } catch (err) {
-      setError('Invalid email or password')
-    } finally {
-      setLoading(false)
+    // Dispatch the login thunk and await the result
+    const result = await dispatch(login(formData))
+
+    if (login.fulfilled.match(result)) {
+      navigate('/dashboard', { replace: true })
     }
+    // On rejection, authError from Redux is shown automatically
   }
+
+  // Prefer backend error over local validation error
+  const displayError = authError || localError
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center px-4">
@@ -65,9 +75,9 @@ function Login() {
           </h2>
 
           {/* Error message */}
-          {error && (
+          {displayError && (
             <div className="bg-red-500/[0.06] border border-red-500/[0.1] text-red-400/80 text-[13px] rounded-lg px-4 py-3 mb-5">
-              {error}
+              {displayError}
             </div>
           )}
 
@@ -84,7 +94,8 @@ function Login() {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="you@company.com"
-                className="w-full mt-1.5 bg-white/[0.02] border border-white/[0.06] text-white text-[14px] rounded-lg px-4 py-2.5 outline-none focus:border-white/[0.15] transition-colors placeholder-neutral-700"
+                disabled={loading}
+                className="w-full mt-1.5 bg-white/[0.02] border border-white/[0.06] text-white text-[14px] rounded-lg px-4 py-2.5 outline-none focus:border-white/[0.15] transition-colors placeholder-neutral-700 disabled:opacity-50"
               />
             </div>
 
@@ -98,7 +109,8 @@ function Login() {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="••••••••"
-                className="w-full mt-1.5 bg-white/[0.02] border border-white/[0.06] text-white text-[14px] rounded-lg px-4 py-2.5 outline-none focus:border-white/[0.15] transition-colors placeholder-neutral-700"
+                disabled={loading}
+                className="w-full mt-1.5 bg-white/[0.02] border border-white/[0.06] text-white text-[14px] rounded-lg px-4 py-2.5 outline-none focus:border-white/[0.15] transition-colors placeholder-neutral-700 disabled:opacity-50"
               />
             </div>
 
@@ -115,7 +127,7 @@ function Login() {
           {/* Divider */}
           <div className="border-t border-white/[0.04] mt-6 pt-6">
             <p className="text-neutral-600 text-[13px] text-center">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <Link
                 to="/signup"
                 className="text-neutral-300 hover:text-white font-medium transition-colors duration-200"
