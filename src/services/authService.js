@@ -37,3 +37,12 @@ export async function getMe() {
   const response = await api.get('/auth/me')
   return response.data  // ✅ — { user }
 }
+
+/**
+ * Logout the current user.
+ * Notifies the backend so it can log/audit the event.
+ */
+export async function logoutUser() {
+  const response = await api.post('/auth/logout')
+  return response.data  // ✅
+}

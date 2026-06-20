@@ -1,5 +1,8 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { logout } from '../store/authSlice'
+import { logoutUser } from '../services/authService'
 
 const initialWorkflows = [
   {
@@ -22,12 +25,18 @@ const initialWorkflows = [
 
 function Dashboard() {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const [workflows, setWorkflows] = useState(initialWorkflows)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [selectedWorkflow, setSelectedWorkflow] = useState(null)
 
-  const handleLogout = () => {
-    localStorage.removeItem('token')
+  const handleLogout = async () => {
+    try {
+      await logoutUser()
+    } catch {
+      // Even if the API call fails (e.g. expired token), we still log out locally
+    }
+    dispatch(logout())
     navigate('/login')
   }
 
