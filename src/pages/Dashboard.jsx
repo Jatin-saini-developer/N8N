@@ -1,34 +1,32 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../store/authSlice'
 import { logoutUser } from '../services/authService'
-
-const initialWorkflows = [
-  {
-    id: '1',
-    name: 'Developer Onboarding',
-    description: 'Automates GitHub, Slack, Jira and Notion access',
-    nodes: 5,
-    createdAt: '2026-05-20',
-    status: 'active',
-  },
-  {
-    id: '2',
-    name: 'Frontend Dev Onboarding',
-    description: 'Specific workflow for frontend developers',
-    nodes: 3,
-    createdAt: '2026-05-22',
-    status: 'draft',
-  },
-]
+import {
+  fetchWorkflows,
+  addWorkflow,
+  removeWorkflow,
+  selectWorkflows,
+  selectWorkflowListLoading,
+  selectWorkflowListError,
+} from '../store/workflowListSlice'
 
 function Dashboard() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const [workflows, setWorkflows] = useState(initialWorkflows)
+
+  const workflows = useSelector(selectWorkflows)
+  const loading = useSelector(selectWorkflowListLoading)
+  const error = useSelector(selectWorkflowListError)
+
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [selectedWorkflow, setSelectedWorkflow] = useState(null)
+
+  // Fetch workflows once when the Dashboard mounts (and on refresh)
+  useEffect(() => {
+    dispatch(fetchWorkflows({ page: 1, limit: 10 }))
+  }, [dispatch])
 
   const handleLogout = async () => {
     try {
@@ -40,17 +38,16 @@ function Dashboard() {
     navigate('/login')
   }
 
-  const handleNewWorkflow = () => {
-    const newWorkflow = {
-      id: `${Date.now()}`,
+  const handleNewWorkflow = async () => {
+    const result = await dispatch(addWorkflow({
       name: 'Untitled Workflow',
-      description: 'No description yet',
-      nodes: 0,
-      createdAt: new Date().toISOString().split('T')[0],
-      status: 'draft',
+      description: '',
+    }))
+
+    if (addWorkflow.fulfilled.match(result)) {
+      const newWorkflow = result.payload.workflow
+      navigate(`/workflow/${newWorkflow._id}`)
     }
-    setWorkflows([...workflows, newWorkflow])
-    navigate(`/workflow/${newWorkflow.id}`)
   }
 
   const handleOpenWorkflow = (id) => {
@@ -63,8 +60,8 @@ function Dashboard() {
     setShowDeleteModal(true)
   }
 
-  const handleDeleteConfirm = () => {
-    setWorkflows(workflows.filter((w) => w.id !== selectedWorkflow.id))
+  const handleDeleteConfirm = async () => {
+    await dispatch(removeWorkflow(selectedWorkflow._id))
     setShowDeleteModal(false)
     setSelectedWorkflow(null)
   }
@@ -122,8 +119,19 @@ function Dashboard() {
           </button>
         </div>
 
-        {/* Workflow grid */}
-        {workflows.length === 0 ? (
+        {/* Error banner */}
+        {error && (
+          <div className="bg-red-500/[0.06] border border-red-500/[0.1] text-red-400/80 text-[13px] rounded-lg px-4 py-3 mb-5">
+            {error}
+          </div>
+        )}
+
+        {/* Loading / Empty / Grid */}
+        {loading ? (
+          <div className="text-center py-24">
+            <p className="text-neutral-500 text-sm">Loading workflows...</p>
+          </div>
+        ) : workflows.length === 0 ? (
           <div className="text-center py-24">
             <div className="text-4xl mb-4">⚡</div>
             <p className="text-neutral-300 text-base font-medium">
@@ -143,8 +151,8 @@ function Dashboard() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {workflows.map((workflow) => (
               <div
-                key={workflow.id}
-                onClick={() => handleOpenWorkflow(workflow.id)}
+                key={workflow._id}
+                onClick={() => handleOpenWorkflow(workflow._id)}
                 className="border border-white/[0.06] bg-white/[0.02] hover:border-white/[0.12] hover:bg-white/[0.03] rounded-xl p-6 cursor-pointer transition-all duration-200 group"
               >
                 {/* Card header */}
@@ -176,16 +184,16 @@ function Dashboard() {
                   {workflow.name}
                 </h3>
                 <p className="text-neutral-600 text-[13px] mb-4 line-clamp-2">
-                  {workflow.description}
+                  {workflow.description || 'No description yet'}
                 </p>
 
                 {/* Card footer */}
                 <div className="flex items-center justify-between pt-4 border-t border-white/[0.04]">
                   <span className="text-neutral-700 text-[11px]">
-                    {workflow.nodes} node{workflow.nodes !== 1 ? 's' : ''}
+                    {workflow.nodeCount} node{workflow.nodeCount !== 1 ? 's' : ''}
                   </span>
                   <span className="text-neutral-700 text-[11px]">
-                    {workflow.createdAt}
+                    {new Date(workflow.createdAt).toLocaleDateString()}
                   </span>
                 </div>
               </div>
