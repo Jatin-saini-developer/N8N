@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectedNode, updateNodeData } from "../../store/workflowSlice";
+import { setSelectedNode, updateNodeData } from "../../store/WorkFlowSlice";
 
 function ConfigPanel() {
   const dispatch = useDispatch();

@@ -11,7 +11,7 @@ import {
   ReactFlowProvider,
 } from '@xyflow/react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setNodes, setEdges, setSelectedNode } from '../../store/workflowSlice'
+import { setNodes, setEdges, setSelectedNode } from '../../store/WorkFlowSlice'
 import TriggerNode from '../Nodes/TriggerNode'
 import GithubNode from '../Nodes/GithubNode'
 import SlackNode from '../Nodes/SlackNode'
