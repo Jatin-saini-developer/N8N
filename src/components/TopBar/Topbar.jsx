@@ -1,21 +1,26 @@
 import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { setWorkflowName } from '../../store/workflowSlice'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  setWorkflowName,
+  saveWorkflow,
+  selectWorkflowName,
+  selectWorkflowSaving,
+  selectLastSavedAt,
+} from '../../store/WorkFlowSlice'
 
 function Topbar() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const nodes = useSelector((state) => state.workflow.nodes)
-  const edges = useSelector((state) => state.workflow.edges)
-  const workflowName = useSelector((state) => state.workflow.workflowName)
+
+  const workflowName = useSelector(selectWorkflowName)
+  const saving = useSelector(selectWorkflowSaving)
+  const lastSavedAt = useSelector(selectLastSavedAt)
 
   const [isEditing, setIsEditing] = useState(false)
 
-  const handleSave = () => {
-    const workflow = { workflowName, nodes, edges }
-    console.log('Workflow saved:', JSON.stringify(workflow, null, 2))
-    alert('Workflow saved to console! Check DevTools.')
+  const handleSave = async () => {
+    await dispatch(saveWorkflow())
   }
 
   const handleNameClick = () => {
@@ -137,10 +142,18 @@ function Topbar() {
         )}
       </div>
 
-      {/* Right — Buttons */}
-      <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+      {/* Right — Save status + Buttons */}
+      <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+
+        {lastSavedAt && !saving && (
+          <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '11px' }}>
+            Saved {new Date(lastSavedAt).toLocaleTimeString()}
+          </span>
+        )}
+
         <button
           onClick={handleSave}
+          disabled={saving}
           style={{
             background: 'transparent',
             border: '1px solid rgba(255,255,255,0.06)',
@@ -148,21 +161,27 @@ function Topbar() {
             color: 'rgba(255,255,255,0.5)',
             padding: '5px 14px',
             fontSize: '13px',
-            cursor: 'pointer',
+            cursor: saving ? 'not-allowed' : 'pointer',
+            opacity: saving ? 0.5 : 1,
             fontFamily: 'inherit',
             transition: 'all 0.15s ease',
           }}
           onMouseEnter={(e) => {
-            e.target.style.borderColor = 'rgba(255,255,255,0.12)'
-            e.target.style.color = '#fff'
+            if (!saving) {
+              e.target.style.borderColor = 'rgba(255,255,255,0.12)'
+              e.target.style.color = '#fff'
+            }
           }}
           onMouseLeave={(e) => {
-            e.target.style.borderColor = 'rgba(255,255,255,0.06)'
-            e.target.style.color = 'rgba(255,255,255,0.5)'
+            if (!saving) {
+              e.target.style.borderColor = 'rgba(255,255,255,0.06)'
+              e.target.style.color = 'rgba(255,255,255,0.5)'
+            }
           }}
         >
-          Save
+          {saving ? 'Saving...' : 'Save'}
         </button>
+
         <button
           style={{
             background: '#fff',

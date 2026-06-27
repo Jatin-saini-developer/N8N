@@ -21,3 +21,13 @@ export async function deleteWorkflow(workflowId) {
   const response = await api.delete(`/workflows/${workflowId}`)
   return response.data
 }
+
+export async function getWorkflowById(workflowId) {
+  const response = await api.get(`/workflows/${workflowId}`)
+  return response.data
+}
+
+export async function updateWorkflow(workflowId, payload) {
+  const response = await api.put(`/workflows/${workflowId}`, payload)
+  return response.data
+}

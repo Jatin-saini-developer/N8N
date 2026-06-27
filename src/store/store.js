@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
-import workflowReducer from './workflowSlice'
+import workflowReducer from './WorkFlowSlice'
 import authReducer from './authSlice'
 import workflowListReducer from './workflowListSlice'
 
