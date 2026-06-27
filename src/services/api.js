@@ -10,8 +10,7 @@
  * so we don't need the full origin in the base URL.
  */
 
-const BASE_URL = '/api/v1'
-
+const BASE_URL = import.meta.env.VITE_API_URL || '/api/v1'
 /**
  * Build headers, injecting the Authorization header when a token exists.
  */
