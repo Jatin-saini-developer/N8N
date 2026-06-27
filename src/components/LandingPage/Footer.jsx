@@ -77,7 +77,7 @@ export default function Footer() {
           </p>
           <div className="flex items-center gap-5">
             <a
-              href="#"
+              href="https://x.com/Jatin___Saini"
               className="text-neutral-800 hover:text-neutral-400 transition-colors duration-200"
               aria-label="Twitter"
             >
@@ -86,7 +86,7 @@ export default function Footer() {
               </svg>
             </a>
             <a
-              href="#"
+              href="https://github.com/Jatin-saini-developer"
               className="text-neutral-800 hover:text-neutral-400 transition-colors duration-200"
               aria-label="GitHub"
             >
@@ -99,7 +99,7 @@ export default function Footer() {
               </svg>
             </a>
             <a
-              href="#"
+              href="https://www.linkedin.com/in/jatin-saini-578693318/"
               className="text-neutral-800 hover:text-neutral-400 transition-colors duration-200"
               aria-label="LinkedIn"
             >
