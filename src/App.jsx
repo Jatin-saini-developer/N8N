@@ -7,6 +7,7 @@ import Signup from './pages/Signup'
 import Dashboard from './pages/Dashboard'
 import WorkflowEditor from './pages/WorkflowEditor'
 import LandingPage from './pages/LandingPage'
+import Privacy from './pages/Privacy'
 
 /**
  * ProtectedRoute — wraps any route that requires authentication.
@@ -25,6 +26,7 @@ function App() {
       <Route path="/landingpage" element={<LandingPage />} />
       <Route path="/login"      element={<Login />} />
       <Route path="/signup"     element={<Signup />} />
+      <Route path="/privacy"    element={<Privacy />} />
 
       {/* Protected routes */}
       <Route
