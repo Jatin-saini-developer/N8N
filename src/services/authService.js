@@ -46,3 +46,8 @@ export async function logoutUser() {
   const response = await api.post('/auth/logout')
   return response.data  // ✅
 }
+
+export async function googleAuth(idToken) {
+  const response = await api.post('/auth/google', { idToken })
+  return response.data
+}

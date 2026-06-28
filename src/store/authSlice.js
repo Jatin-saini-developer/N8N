@@ -13,12 +13,13 @@
  */
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { loginUser, signupUser, getMe } from '../services/authService'
+// import { loginUser, signupUser, getMe } from '../services/authService'
+import { loginUser, signupUser, getMe, logoutUser as logoutAPI, googleAuth as googleAuthAPI } from '../services/authService'
 
 // ─── Initial state (hydrated from localStorage) ─────────────────────────────
 
 const storedToken = localStorage.getItem('token') || null
-const storedUser  = (() => {
+const storedUser = (() => {
   try {
     const raw = localStorage.getItem('user')
     return raw ? JSON.parse(raw) : null
@@ -28,10 +29,10 @@ const storedUser  = (() => {
 })()
 
 const initialState = {
-  user:    storedUser,
-  token:   storedToken,
+  user: storedUser,
+  token: storedToken,
   loading: false,
-  error:   null,
+  error: null,
 }
 
 // ─── Async thunks ────────────────────────────────────────────────────────────
@@ -72,6 +73,18 @@ export const fetchCurrentUser = createAsyncThunk(
   }
 )
 
+export const googleLogin = createAsyncThunk(
+  'auth/googleLogin',
+  async (idToken, { rejectWithValue }) => {
+    try {
+      const data = await googleAuthAPI(idToken)
+      return data
+    } catch (err) {
+      return rejectWithValue(err.message || 'Google login failed')
+    }
+  }
+)
+
 // ─── Helper — persist auth to localStorage ───────────────────────────────────
 
 function persistAuth(token, user) {
@@ -94,7 +107,7 @@ const authSlice = createSlice({
      * Call this to log out the user and wipe all persisted auth data.
      */
     logout(state) {
-      state.user  = null
+      state.user = null
       state.token = null
       state.error = null
       clearAuth()
@@ -111,53 +124,71 @@ const authSlice = createSlice({
     builder
       .addCase(login.pending, (state) => {
         state.loading = true
-        state.error   = null
+        state.error = null
       })
       .addCase(login.fulfilled, (state, action) => {
         const { token, user } = action.payload
         state.loading = false
-        state.token   = token
-        state.user    = user
+        state.token = token
+        state.user = user
         persistAuth(token, user)
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false
-        state.error   = action.payload
+        state.error = action.payload
       })
 
     // ── signup ────────────────────────────────────────────────────────
     builder
       .addCase(signup.pending, (state) => {
         state.loading = true
-        state.error   = null
+        state.error = null
       })
       .addCase(signup.fulfilled, (state, action) => {
         const { token, user } = action.payload
         state.loading = false
-        state.token   = token
-        state.user    = user
+        state.token = token
+        state.user = user
         persistAuth(token, user)
       })
       .addCase(signup.rejected, (state, action) => {
         state.loading = false
-        state.error   = action.payload
+        state.error = action.payload
+      })
+
+
+    builder
+      .addCase(googleLogin.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(googleLogin.fulfilled, (state, action) => {
+        const { token, user } = action.payload
+        state.loading = false
+        state.token = token
+        state.user = user
+        persistAuth(token, user)
+      })
+      .addCase(googleLogin.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload
       })
 
     // ── fetchCurrentUser ──────────────────────────────────────────────
     builder
       .addCase(fetchCurrentUser.pending, (state) => {
         state.loading = true
-        state.error   = null
+        state.error = null
       })
       .addCase(fetchCurrentUser.fulfilled, (state, action) => {
         state.loading = false
-        state.user    = action.payload.user
+        state.user = action.payload.user
       })
       .addCase(fetchCurrentUser.rejected, (state) => {
         // Token is invalid / expired — force logout
         state.loading = false
-        state.user    = null
-        state.token   = null
+        state.user = null
+        state.token = null
         clearAuth()
       })
   },
@@ -167,10 +198,10 @@ export const { logout, clearError } = authSlice.actions
 
 // ─── Selectors ────────────────────────────────────────────────────────────────
 
-export const selectUser        = (state) => state.auth.user
-export const selectToken       = (state) => state.auth.token
+export const selectUser = (state) => state.auth.user
+export const selectToken = (state) => state.auth.token
 export const selectAuthLoading = (state) => state.auth.loading
-export const selectAuthError   = (state) => state.auth.error
-export const selectIsLoggedIn  = (state) => Boolean(state.auth.token)
+export const selectAuthError = (state) => state.auth.error
+export const selectIsLoggedIn = (state) => Boolean(state.auth.token)
 
 export default authSlice.reducer

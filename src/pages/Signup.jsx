@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { signup, clearError, selectAuthLoading, selectAuthError, selectIsLoggedIn } from '../store/authSlice'
-
+// import { signup, clearError, selectAuthLoading, selectAuthError, selectIsLoggedIn } from '../store/authSlice'
+import { GoogleLogin } from '@react-oauth/google'
+import { signup, googleLogin, clearError, selectAuthLoading, selectAuthError, selectIsLoggedIn } from '../store/authSlice'
 function Signup() {
-  const navigate   = useNavigate()
-  const dispatch   = useDispatch()
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
-  const loading    = useSelector(selectAuthLoading)
-  const authError  = useSelector(selectAuthError)
+  const loading = useSelector(selectAuthLoading)
+  const authError = useSelector(selectAuthError)
   const isLoggedIn = useSelector(selectIsLoggedIn)
 
   const [formData, setFormData] = useState({
@@ -28,6 +29,19 @@ function Signup() {
     setFormData({ ...formData, [e.target.name]: e.target.value })
     setLocalError('')
     dispatch(clearError())
+  }
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    const idToken = credentialResponse.credential
+    const result = await dispatch(googleLogin(idToken))
+
+    if (googleLogin.fulfilled.match(result)) {
+      navigate('/dashboard', { replace: true })
+    }
+  }
+
+  const handleGoogleError = () => {
+    setLocalError('Google sign-in failed. Please try again.')
   }
 
   const handleSubmit = async (e) => {
@@ -85,6 +99,24 @@ function Signup() {
           <h2 className="text-white text-lg font-semibold mb-6">
             Create your account
           </h2>
+
+          {/* Google Sign-In — sabse upar */}
+          <div className="mb-5">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={handleGoogleError}
+              theme="filled_black"
+              width="100%"
+              text="signup_with"
+            />
+          </div>
+
+          {/* Divider */}
+          <div className="flex items-center gap-3 mb-5">
+            <div className="flex-1 h-px bg-white/[0.06]"></div>
+            <span className="text-neutral-600 text-[12px]">or</span>
+            <div className="flex-1 h-px bg-white/[0.06]"></div>
+          </div>
 
           {/* Error message */}
           {displayError && (
