@@ -8,6 +8,8 @@ import Dashboard from './pages/Dashboard'
 import WorkflowEditor from './pages/WorkflowEditor'
 import LandingPage from './pages/LandingPage'
 import Privacy from './pages/Privacy'
+import Integrations from './pages/Integrations/Integrations'
+import GithubCallback from './pages/Integrations/GithubCallback'
 
 /**
  * ProtectedRoute — wraps any route that requires authentication.
@@ -22,11 +24,11 @@ function ProtectedRoute({ children }) {
 function App() {
   return (
     <Routes>
-      <Route path="/"           element={<Navigate to="/landingpage" replace />} />
+      <Route path="/" element={<Navigate to="/landingpage" replace />} />
       <Route path="/landingpage" element={<LandingPage />} />
-      <Route path="/login"      element={<Login />} />
-      <Route path="/signup"     element={<Signup />} />
-      <Route path="/privacy"    element={<Privacy />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/privacy" element={<Privacy />} />
 
       {/* Protected routes */}
       <Route
@@ -42,6 +44,22 @@ function App() {
         element={
           <ProtectedRoute>
             <WorkflowEditor />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path='/integrations'
+        element={
+          <ProtectedRoute>
+            <Integrations />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path='/integrations/github/callback'
+        element={
+          <ProtectedRoute>
+            <GithubCallback />
           </ProtectedRoute>
         }
       />
