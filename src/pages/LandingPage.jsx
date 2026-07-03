@@ -1,4 +1,5 @@
 import Navbar from "../components/LandingPage/Navbar"
+import ChatBot from "../components/ChatBot/ChatBot"
 import HeroSection from "../components/LandingPage/HeroSection"
 import LogoCloud from "../components/LandingPage/LogoCloud"
 import ProblemSolution from "../components/LandingPage/ProblemSolution"
@@ -28,6 +29,9 @@ const LandingPage = () => {
       </div>
       <CTASection />
       <Footer />
+
+      {/* ── ChatBot widget — fixed overlay, always on top ── */}
+      <ChatBot />
     </div>
   )
 }
