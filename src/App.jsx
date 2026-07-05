@@ -9,6 +9,7 @@ import WorkflowEditor from './pages/WorkflowEditor'
 import LandingPage from './pages/LandingPage'
 import Privacy from './pages/Privacy'
 import Terms from './pages/Terms'
+import Security from './pages/Security'
 import Integrations from './pages/Integrations/Integrations'
 import GithubCallback from './pages/Integrations/GithubCallback'
 
@@ -31,6 +32,7 @@ function App() {
       <Route path="/signup" element={<Signup />} />
       <Route path="/privacy" element={<Privacy />} />
       <Route path="/terms" element={<Terms />} />
+      <Route path="/security" element={<Security />} />
 
       {/* Protected routes */}
       <Route
