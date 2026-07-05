@@ -23,7 +23,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 
 /* ── Config ───────────────────────────────────────────── */
-const CHAT_API_URL = "http://localhost:5000/api/chat";
+const CHAT_API_URL = "http://localhost:8000/api/chat";
 
 const INITIAL_MESSAGES = [
   {
